@@ -760,11 +760,16 @@ button, div, a { outline: none; user-select: none; }
 </style>
 </head>
 <body>
+
 <div id="preloader">
-  <div class="preloader-content">
-    <div class="brand">Maestro Mode</div>
+  <div class="cinema-wrap">
+    <div class="brand">
+      <div class="line"></div>
+      <h1>MAESTRO MODE</h1>
+      <div class="line"></div>
+    </div>
     <div class="sub">CALL CENTER</div>
-    <div class="loader-line"></div>
+    <div class="glow-sweep"></div>
   </div>
 </div>
 
@@ -861,40 +866,40 @@ button, div, a { outline: none; user-select: none; }
 // ============================================================
 const data = {  
   "anak cowok": [  
-    { title: "celana", variants: ["pendek", "panjang"], messageTemplate: "Permisi kak, saya mau lihat {title} {variant} untuk {kategori}.", images: [""] },  
+    { title: "celana", variants: ["pendek", "panjang"], messageTemplate: "Permisi kak, saya mau lihat {title} {variant} untuk {kategori}.", images: ["a.webp", "a.webp"] },  
     { title: "atasan", variants: ["kaos lengan pendek", "kaos lengan panjang", "kemeja pdk", "kemeja pjg", "hoodie/jaket"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images: ["https://images.unsplash.com/photo-1503919919749-646ddc4fddfa?auto=format&fit=crop&w=500&q=80"] },  
     { title: "setelan", variants: ["setelan Hp", "setelan Cp", "setelan Pp"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images: ["https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?auto=format&fit=crop&w=500&q=80"] },  
     { title: "Baju koko", messageTemplate: "Permisi kak, saya mau lihat {title} untuk {kategori}.", images: ["https://images.unsplash.com/photo-1598440499033-547b19615c41?auto=format&fit=crop&w=500&q=80"] }  
   ],
   "anak cewek": [  
-    { title: "bawahan", variants: ["celana pdk", "celana pjg"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:[a.webp,a.webp] },  
-    { title: "atasan", variants: ["kaos pdk", "kaos pjg", "Hoodie/Jaket"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:[a.webp,a.webp] },  
-    { title: "setelan", variants: ["setelan Hp", "setelan Cp", "setelan Pp"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:[a.webp,a.webp] },  
-    { title: "Dress", messageTemplate: "Permisi kak, saya mau lihat {title} untuk {kategori}.", images:[a.webp,a.webp] }  
+    { title: "bawahan", variants: ["celana pdk", "celana pjg"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:["https://via.placeholder.com/500x600?text=Produk"] },  
+    { title: "atasan", variants: ["kaos pdk", "kaos pjg", "Hoodie/Jaket"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:["https://via.placeholder.com/500x600?text=Produk"] },  
+    { title: "setelan", variants: ["setelan Hp", "setelan Cp", "setelan Pp"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:["https://via.placeholder.com/500x600?text=Produk"] },  
+    { title: "Dress", messageTemplate: "Permisi kak, saya mau lihat {title} untuk {kategori}.", images:["https://via.placeholder.com/500x600?text=Produk"] }  
   ],  
   "cewek dewasa": [  
-    { title: "Bawahan", variants: ["Hotpants", "Celana pjg", "Kulot 3/4", "Kulot", "Rok"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:[a.webp,a.webp] },  
-    { title: "Atasan", variants: ["Crop Top", "Kaos Pdk", "Kaos Pjg", "Blouse", "Dress", "Tunik", "Hoodie/Jaket", "Daster"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:[a.webp,a.webp] },  
-    { title: "Sandal/Sepatu", variants: ["Sandal", "Sepatu"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:[a.webp,a.webp] },  
-    { title: "Jam Tangan", messageTemplate: "Permisi kak, saya mau lihat {title} untuk {kategori}.", images:[a.webp,a.webp] }  
+    { title: "Bawahan", variants: ["Hotpants", "Celana pjg", "Kulot 3/4", "Kulot", "Rok"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:["https://via.placeholder.com/500x600?text=Produk"] },  
+    { title: "Atasan", variants: ["Crop Top", "Kaos Pdk", "Kaos Pjg", "Blouse", "Dress", "Tunik", "Hoodie/Jaket", "Daster"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:["https://via.placeholder.com/500x600?text=Produk"] },  
+    { title: "Sandal/Sepatu", variants: ["Sandal", "Sepatu"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:["https://via.placeholder.com/500x600?text=Produk"] },  
+    { title: "Jam Tangan", messageTemplate: "Permisi kak, saya mau lihat {title} untuk {kategori}.", images:["https://via.placeholder.com/500x600?text=Produk"] }  
   ],  
   "cowok dewasa": [  
-    { title: "Bawahan", variants: ["Celana Pdk", "Celana Pjg"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:[a.webp,a.webp] },  
-    { title: "Atasan", variants: ["Singlet", "Kaos Pdk", "Kaos Pjg", "Kemeja Pdk", "Kemeja Pjg", "Baju Koko Pdk", "Baju Koko Pjg", "Baju Batik Pdk", "Baju Batik Pjg", "Hoodie/Jaket"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:[a.webp,a.webp] },  
-    { title: "Sandal/Sepatu", variants: ["Sandal",'Sepatu'], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:[a.webp,a.webp] },  
-    { title: "Jam Tangan", messageTemplate: "Permisi kak, saya mau lihat {title} untuk {kategori}.", images:[a.webp,a.webp] }  
+    { title: "Bawahan", variants: ["Celana Pdk", "Celana Pjg"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:["https://via.placeholder.com/500x600?text=Produk"] },  
+    { title: "Atasan", variants: ["Singlet", "Kaos Pdk", "Kaos Pjg", "Kemeja Pdk", "Kemeja Pjg", "Baju Koko Pdk", "Baju Koko Pjg", "Baju Batik Pdk", "Baju Batik Pjg", "Hoodie/Jaket"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:["https://via.placeholder.com/500x600?text=Produk"] },  
+    { title: "Sandal/Sepatu", variants: ["Sandal",'Sepatu'], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:["https://via.placeholder.com/500x600?text=Produk"] },  
+    { title: "Jam Tangan", messageTemplate: "Permisi kak, saya mau lihat {title} untuk {kategori}.", images:["https://via.placeholder.com/500x600?text=Produk"] }  
   ],  
   "Lain-lain": [  
-    { title: "Tas", variants: ["Tas selempang", "Tas travel", "Tas gendong"], messageTemplate: "Permisi kak, saya mau lihat {variant}.", images:[a.webp,a.webp] },  
-    { title: "Perabotan", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:[a.webp,a.webp] },  
-    { title: "Boneka", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:[a.webp,a.webp] },  
-    { title: "Selimut", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:[a.webp,a.webp] },  
-    { title: "Sajadah", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:[a.webp,a.webp] },  
-    { title: "Mukena", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:[a.webp,a.webp] },  
-    { title: "Sarung", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:[a.webp,a.webp] },  
-    { title: "Bantal", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:[a.webp,a.webp] },  
-    { title: "Peralatan Bayi", variants: ["Tempat Makan Bayi", "Kasur Bayi", "Tas Bayi"], messageTemplate: "Permisi kak, saya mau lihat {variant}.", images:[a.webp,a.webp] },  
-    { title: "Mainan", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:[a.webp,a.webp] }  
+    { title: "Tas", variants: ["Tas selempang", "Tas travel", "Tas gendong"], messageTemplate: "Permisi kak, saya mau lihat {variant}.", images:["https://via.placeholder.com/500x600?text=Produk"] },  
+    { title: "Perabotan", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:["https://via.placeholder.com/500x600?text=Produk"] },  
+    { title: "Boneka", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:["https://via.placeholder.com/500x600?text=Produk"] },  
+    { title: "Selimut", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:["https://via.placeholder.com/500x600?text=Produk"] },  
+    { title: "Sajadah", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:["https://via.placeholder.com/500x600?text=Produk"] },  
+    { title: "Mukena", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:["https://via.placeholder.com/500x600?text=Produk"] },  
+    { title: "Sarung", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:["https://via.placeholder.com/500x600?text=Produk"] },  
+    { title: "Bantal", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:["https://via.placeholder.com/500x600?text=Produk"] },  
+    { title: "Peralatan Bayi", variants: ["Tempat Makan Bayi", "Kasur Bayi", "Tas Bayi"], messageTemplate: "Permisi kak, saya mau lihat {variant}.", images:["https://via.placeholder.com/500x600?text=Produk"] },  
+    { title: "Mainan", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:["https://via.placeholder.com/500x600?text=Produk"] }  
   ]  };
 
 // ============================================================
@@ -968,6 +973,7 @@ function renderCats() {
 // RENDER PRODUK DENGAN SKELETON
 // ============================================================
 function renderProduct() {
+  loadedCount = 0;
   const items = data[currentCat];
   const item = items[currentProductIndex];
   const images = (item.images && item.images.length > 0)
@@ -976,9 +982,14 @@ function renderProduct() {
 
   productDisplay.classList.add('skeleton', 'is-loading');
 
-  const imageTags = images.map((img, i) =>
-    `<img src="${img}" loading="lazy" decoding="async" onclick="openLightbox()">`
-  ).join('');
+const imageTags = images.map((img) =>
+  `<img 
+      src="${img}" 
+      onload="imageLoaded()" 
+      loading="lazy" 
+      decoding="async"
+      onclick="openLightbox()">`
+).join('');
 
   productDisplay.innerHTML = `
     <div class="photo-wrapper">
@@ -994,11 +1005,21 @@ function renderProduct() {
   `;
 
   clearInterval(autoScrollInterval);
+setTimeout(() => {
   startAutoScroll(images.length);
+}, 120);
 }
 
-function imageLoaded(img) {
-  productDisplay.classList.remove('skeleton', 'is-loading');
+let loadedCount = 0;
+
+function imageLoaded() {
+  loadedCount++;
+  const total = document.querySelectorAll('#photo-track img').length;
+
+  if (loadedCount >= total) {
+    productDisplay.classList.remove('skeleton', 'is-loading');
+    loadedCount = 0;
+  }
 }
 
 // ============================================================
@@ -1036,16 +1057,29 @@ function changeProduct(direction) {
 // AUTO SCROLL FOTO
 // ============================================================
 function startAutoScroll(count) {
+  if (autoScrollInterval) clearInterval(autoScrollInterval);
   if (count <= 1) return;
+
   const track = document.getElementById('photo-track');
   const counterTag = document.getElementById('img-count-tag');
+
+  if (!track) return;
+
   let idx = 0;
+
   autoScrollInterval = setInterval(() => {
-    idx++;
-    if (idx >= count) idx = 0;
-    const width = track.offsetWidth;
-    if (track) track.scrollTo({ left: width * idx, behavior: 'smooth' });
-    if (counterTag) counterTag.textContent = `${idx + 1} / ${count}`;
+    idx = (idx + 1) % count;
+
+    const width = track.clientWidth;
+
+    track.scrollTo({
+      left: width * idx,
+      behavior: 'smooth'
+    });
+
+    if (counterTag) {
+      counterTag.textContent = `${idx + 1} / ${count}`;
+    }
   }, 3000);
 }
 
@@ -1081,7 +1115,7 @@ function openPopup() {
   const popup   = document.getElementById('popup');
   const options = document.getElementById('popup-options');
   options.innerHTML = '';
-  if (!product.variants || product.variants.length === 0) { sendWhatsApp(product, ''); return; }
+  if (!Array.isArray(product.variants) || product.variants.length === 0) { sendWhatsApp(product, ''); return; }
   product.variants.forEach(v => {
     const btn = document.createElement('div');
     btn.className = 'option-btn';
@@ -1114,7 +1148,7 @@ function sendWhatsApp(product, variant) {
     msg = `Halo kak, saya tertarik dengan ${payload.title} ${payload.variant}`;
   }
 
-  window.open(`https://wa.me/6281391676392?text=${encodeURIComponent(msg)}`, '_blank');  
+  window.open(`https://wa.me/6285867003318?text=${encodeURIComponent(msg)}`, '_blank');  
   closePopup();  
 }
 
@@ -1215,7 +1249,8 @@ if ("serviceWorker" in navigator) {
 
 window.addEventListener("load", () => {
   setTimeout(() => {
-    document.getElementById("preloader").classList.add("hide");
+    const pre = document.getElementById("preloader");
+    if (pre) pre.classList.add("hide");
   }, 2200);
 });
 </script>
