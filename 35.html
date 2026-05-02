@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FashionStore - Katalog Slider 3D</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#161616">
+<style>
+/* CSS RESET & BASE */
+*{margin:0;padding:0;box-sizing:border-box}
+/* ===== CINEMATIC INTRO ===== */
+#preloader {
+    position: fixed;
+    inset: 0;
+    background: #0f0f0f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    overflow: hidden;
+}
+
+/* EXIT */
+#preloader.hide {
+    opacity: 0;
+    visibility: hidden;
+    transition: 1s ease;
+}
+
+/* WRAPPER */
+.cinema-wrap {
+    text-align: center;
+    animation: fadeIn 1.2s ease;
+}
+
+/* BRAND ROW */
+.brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+}
+
+/* LINE EFFECT */
+.brand .line {
+    width: 60px;
+    height: 1px;
+    background: rgba(255,255,255,0.25);
+    animation: lineGlow 2s ease-in-out infinite;
+}
+
+/* TEXT BRAND */
+.brand h1 {
+    font-size: 32px;
+    letter-spacing: 4px;
+    color: white;
+    font-weight: 700;
+    animation: textReveal 1.5s ease forwards;
+    opacity: 0;
+}
+
+/* SUBTITLE */
+.sub {
+    margin-top: 10px;
+    font-size: 12px;
+    letter-spacing: 8px;
+    color: #25D366;
+    opacity: 0;
+    animation: subFade 1.8s ease forwards;
+}
+
+/* SWEEP LIGHT */
+.glow-sweep {
+    position: absolute;
+    width: 200px;
+    height: 100%;
+    top: 0;
+    left: -200px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.1),
+        rgba(37,211,102,0.2),
+        transparent
+    );
+    transform: skewX(-20deg);
+    animation: sweep 2.5s ease forwards;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes sweep {
+    0% { left: -200px; }
+    100% { left: 120%; }
+}
+
+@keyframes textReveal {
+    0% { opacity: 0; transform: scale(1.1); filter: blur(10px); }
+    60% { opacity: 1; filter: blur(0); }
+    100% { opacity: 1; }
+}
+
+@keyframes subFade {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 0.8; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes lineGlow {
+    0%,100% { opacity: 0.3; }
+    50% { opacity: 1; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+}
+/* ===== BODY (GLASS BACKGROUND) ===== */
+body {
+    font-family: 'Poppins', sans-serif;
+    background:#161616ff;
+    color: #FFFFFF;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* ===== GLASS GLOBAL EFFECT ===== */
+header,
+.product-container,
+.popup-box,
+.install-box,
+.nav-arrow,
+footer {
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.5),
+        0 0 0 1px rgba(255,255,255,0.05),
+        inset 0 1px 0 rgba(255,255,255,0.15),
+        inset 0 0 20px rgba(255,255,255,0.03);
+}
+
+/* 1. HEADER */
+header {
+    padding: 10px 20px;
+    text-align: center;
+    margin: 15px 10px 20px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 140px;
+    height:auto;
+}
+
+header h1{
+    font-size: clamp(22px, 5vw, 35px);
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: #FFFFFF;
+}
+
+.typing-container {
+    font-size: clamp(16px, 4vw, 25px);
+    font-weight: 700;
+    color: white;
+    display: inline-block;
+    animation: blinkSlow 2s infinite;
+    margin-top: -40px;
+}
+
+@keyframes blinkSlow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* 2. NAV */
+.nav-categories {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 10px 15px;
+}
+.nav-categories::-webkit-scrollbar { display: none; }
+
+.cat {
+    white-space: nowrap;
+    padding: 10px 22px;
+    color: #F5F5F5;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow:
+        0 4px 12px rgba(0,0,0,0.25),
+        0 0 0 1px rgba(255,255,255,0.05),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.cat::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.6), transparent);
+    transform: skewX(-25deg);
+    transition: 0.5s;
+}
+
+.cat:hover {
+    background: #FFFFFF;
+    color: #000000;
+    border: 1px solid rgba(255,255,255,0.9);
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 25px rgba(255,255,255,0.2), 0 0 10px rgba(255,255,255,0.15), inset 0 1px 0 rgba(255,255,255,0.9);
+    animation: popUp 0.25s ease;
+}
+
+.cat:hover::after, .cat.active::after { left: 130%; }
+.cat.active {
+    background: #FFFFFF;
+    color: #121212;
+    transform: translateY(-4px) scale(1.05);
+}
+
+/* 3. MAIN (DENGAN PERSPECTIVE 3D) */
+.main-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    position: relative;
+    width: min(70%, 450px);
+    max-width: 450px;
+    margin: 0 auto;
+    perspective: 1200px;
+}
+
+.product-container {
+    width: 100%;
+    border-radius: 25px;
+    overflow: hidden;
+    position: relative;
+    margin-top: var(--product-offset, -150px);
+    transition: transform 0.3s ease;
+    z-index: 2;
+    backface-visibility: hidden;
+}
+
+/* 🔥 ANIMASI PIRAMIDA (STAIRCASE) 🔥 */
+.animate-out-left { animation: stairDownLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.animate-in-right { animation: stairUpRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.animate-out-right { animation: stairDownRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.animate-in-left { animation: stairUpLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+
+@keyframes stairDownLeft {
+    0% { transform: scale(1) translateX(0) translateZ(0) rotateY(0); opacity: 1; }
+    100% { transform: scale(0.6) translateX(-150px) translateZ(-300px) rotateY(20deg) translateY(50px); opacity: 0; }
+}
+
+@keyframes stairUpRight {
+    0% { transform: scale(0.6) translateX(150px) translateZ(-300px) rotateY(-20deg) translateY(50px); opacity: 0; }
+    100% { transform: scale(1) translateX(0) translateZ(0) rotateY(0) translateY(0); opacity: 1; }
+}
+
+@keyframes stairDownRight {
+    0% { transform: scale(1) translateX(0) translateZ(0) rotateY(0); opacity: 1; }
+    100% { transform: scale(0.6) translateX(150px) translateZ(-300px) rotateY(-20deg) translateY(50px); opacity: 0; }
+}
+
+@keyframes stairUpLeft {
+    0% { transform: scale(0.6) translateX(-150px) translateZ(-300px) rotateY(20deg) translateY(50px); opacity: 0; }
+    100% { transform: scale(1) translateX(0) translateZ(0) rotateY(0) translateY(0); opacity: 1; }
+}
+
+/* ✨ SKELETON LOADING EFFECT ✨ */
+.skeleton {
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.skeleton::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.1) 20%,
+        rgba(255, 255, 255, 0.2) 60%,
+        rgba(255, 255, 255, 0)
+    );
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    100% { transform: translateX(100%); }
+}
+
+.is-loading img {
+    visibility: hidden;
+}
+
+/* FOTO & INFO SEKSI */
+.photo-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1/1;
+    background: rgba(0,0,0,0.2);
+    overflow: hidden;
+    display: flex;
+}
+.photo-track {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+}
+.photo-track::-webkit-scrollbar { display: none; }
+.photo-track img {
+    min-width: 100%;
+    height: 100%;
+    object-fit: cover;
+    scroll-snap-align: start;
+    cursor: zoom-in;
+    transition: opacity 0.3s ease;
+}
+.img-counter {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(6px);
+    color: #FFFFFF;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    z-index: 5;
+}
+.info-section { padding: 25px 20px; text-align: center; }
+.info-section h2 { font-size: 18px; margin-bottom: 12px; font-weight: 700; }
+
+.wa-btn, .option-btn, .btn-install {
+    padding: 10px;
+    color: black;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    background: #25D366;
+    backdrop-filter: blur(8px);
+    border: 1px solid white;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    transition: 0.25s;
+}
+
+/* ✨ NAV ARROW HOVER ANIMATION ✨ */
+.nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    color: #FFFFFF;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.nav-arrow:hover {
+    background: rgba(255, 255, 255, 0.25) !important;
+    transform: translateY(-50%) scale(1.2);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    color: #25D366;
+}
+
+.nav-arrow:active {
+    transform: translateY(-50%) scale(0.9);
+}
+
+.prev-btn { left: -18px; }
+.next-btn { right: -18px; }
+
+/* POPUP & LIGHTBOX */
+.popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(8px);
+    z-index: 100;
+}
+.lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+}
+.lightbox img { max-width: 90%; max-height: 70%; border-radius: 10px; }
+
+.popup-box {
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+    width: 80%;
+    max-width: 300px;
+}
+.popup-box h3 { margin-bottom: 15px; }
+.popup-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.popup-cancel {
+    margin-top: 15px;
+    cursor: pointer;
+    color: #bbb;
+    font-weight: 600;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    color: #fff;
+    font-size: 35px;
+    cursor: pointer;
+}
+.lightbox-nav {
+    margin-top: 25px;
+    display: flex;
+    gap: 30px;
+    color: #fff;
+}
+.lightbox-nav-btn {
+    cursor: pointer;
+    background: rgba(255,255,255,0.1);
+    padding: 5px 15px;
+    border-radius: 10px;
+}
+
+/* FOOTER */
+footer {
+    margin-top: auto;
+    padding: 16px 20px;
+    font-size: 12px;
+    text-align: center;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.5px;
+    position: relative;
+    z-index: 10;
+}
+
+/* LOGO SVG */
+.logo-svg svg { width: 100%; height: 60px; }
+.logo-svg text {
+    font-size: 55px;
+    font-weight: 700;
+    fill: transparent;
+    stroke: white;
+    stroke-width: 1.5;
+}
+
+/* INSTALL POPUP */
+.install-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.4s;
+}
+.install-overlay.show { opacity: 1; pointer-events: all; }
+.install-box {
+    width: 85%;
+    max-width: 340px;
+    padding: 28px;
+    border-radius: 22px;
+    transform: scale(0.85);
+    opacity: 0;
+    transition: 0.4s;
+}
+.install-overlay.show .install-box { transform: scale(1); opacity: 1; }
+.sub-text { font-size: 15px; font-weight: 800; letter-spacing: 7px; text-align: center; }
+
+.install-header { text-align: center; margin-bottom: 15px; }
+.install-content { text-align: center; margin-bottom: 20px; font-size: 14px; opacity: 0.8; }
+.install-actions { display: flex; flex-direction: column; gap: 10px; }
+.btn-install-cancel { background: none; border: none; color: white; cursor: pointer; font-size: 12px; opacity: 0.6; }
+
+* { -webkit-tap-highlight-color: transparent; }
+button, div, a { outline: none; user-select: none; }
+
+.floating-wa {
+    position: fixed;
+    bottom: 55px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #25D366;
+    color: black;
+    padding: 12px 20px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    z-index: 999;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    transition: 0.2s;
+}
+.floating-wa:active { transform: translateX(-50%) scale(0.95); }
+</style>
+</head>
+<body>
+<div id="preloader">
+  <div class="preloader-content">
+    <div class="brand">Maestro Mode</div>
+    <div class="sub">CALL CENTER</div>
+    <div class="loader-line"></div>
+  </div>
+</div>
+<header>
+    <div class="logo-svg">
+      <svg viewBox="0 0 600 100">
+        <text id="logo-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">
+          Maestro Mode
+        </text>
+      </svg>
+    </div>
+    <div class="typing-container">CALL CENTER</div>
+    <div class="sub-text">Tanya &bull; Cocok &bull; Beli</div>
+</header>
+
+<div class="nav-categories" id="categories"></div>
+
+<div class="main-content">
+    <div class="nav-arrow prev-btn" onclick="changeProduct(-1)">&#10094;</div>
+    <div class="product-container skeleton" id="product-display"></div>
+    <div class="nav-arrow next-btn" onclick="changeProduct(1)">&#10095;</div>
+</div>
+
+<div class="floating-wa" onclick="openPopup()">Whatsapp</div>
+<footer>&copy; 2026 FashionStore - All Rights Reserved</footer>
+
+<div id="popup" class="popup">
+  <div class="popup-box">
+    <h3>Pilih Variasi</h3>
+    <div id="popup-options" class="popup-options"></div>
+    <div class="popup-cancel" onclick="closePopup()">Batal</div>
+  </div>
+</div>
+
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+    <span class="lightbox-close">&times;</span>
+    <img id="lightbox-img" src="" alt="Preview produk">
+    <div class="lightbox-nav" onclick="event.stopPropagation()">
+        <span class="lightbox-nav-btn" onclick="changePreview(-1)">&#9664;</span>
+        <span id="preview-index">1 / 1</span>
+        <span class="lightbox-nav-btn" onclick="changePreview(1)">&#9654;</span>
+    </div>
+</div>
+
+<div id="installPopup" class="install-overlay">
+  <div class="install-box">
+    <div class="install-header">
+      <h2>Maestro Mode</h2>
+      <p>Experience it like an app</p>
+    </div>
+    <div class="install-content">
+      <p>Install sekarang untuk akses lebih cepat, tanpa buka browser, dan tampil seperti aplikasi premium.</p>
+    </div>
+    <div class="install-actions">
+      <button id="installBtn" class="btn-install">Install App</button>
+      <button onclick="closeInstall()" class="btn-install-cancel">Nanti</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA KATALOG
+// ============================================================
+const data = {
+  "Anak cowok": [
+    { title: "Celana", variants: ["Pendek", "Panjang"], messageType: "lihat", images: ["https://images.unsplash.com/photo-1519457439534-119c4c1c4706?auto=format&fit=crop&w=500&q=80"] },
+    { title: "Atasan", variants: ["Kaos Lengan Pendek", "Kaos Lengan Panjang", "Kemeja Pdk", "Kemeja Pjg", "Hoodie/Jaket"], messageType: "tanya", images: ["https://images.unsplash.com/photo-1503919919749-646ddc4fddfa?auto=format&fit=crop&w=500&q=80"] },
+    { title: "Setelan", variants: ["Setelan Hp", "Setelan Cp", "Setelan Pp"], messageTemplate: "Halo kak, cek {variant}", images: ["https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?auto=format&fit=crop&w=500&q=80"] },
+    { title: "Baju Koko", messageType: "lihat", images: ["https://images.unsplash.com/photo-1598440499033-547b19615c41?auto=format&fit=crop&w=500&q=80"] }
+  ],
+  "Anak cewek": [
+    { title: "Bawahan", variants: ["Celana Pdk", "Celana Pjg"], messageType: "lihat", images: [] },
+    { title: "Atasan", variants: ["Kaos Pdk", "Kaos Pjg", "Hoodie/Jaket"], messageType: "lihat", images: [] },
+    { title: "Setelan", variants: ["Setelan Hp", "Setelan Cp", "Setelan Pp"], messageType: "lihat", images: [] },
+    { title: "Dress", messageType: "lihat", images: [] }
+  ],
+  "Cewek Dewasa": [
+    { title: "Bawahan", variants: ["Hotpants", "Celana Pjg", "Kulot 3/4", "Kulot", "Rok"], messageType: "lihat", images: [] },
+    { title: "Atasan", variants: ["Crop Top", "Kaos Pdk", "Kaos Pjg", "Blouse", "Dress", "Tunik", "Hoodie/Jaket", "Daster"], messageType: "lihat", images: [] },
+    { title: "Sandal/Sepatu", variants: ["Sandal Cewek", "Sepatu Cewek"], messageType: "lihat", images: [] },
+    { title: "Jam Tangan", messageType: "lihat", images: [] }
+  ],
+  "Cowok Dewasa": [
+    { title: "Bawahan", variants: ["Celana Pdk", "Celana Pjg"], messageType: "lihat", images: [] },
+    { title: "Atasan", variants: ["Singlet", "Kaos Pdk", "Kaos Pjg", "Kemeja Pdk", "Kemeja Pjg", "Baju Koko Pdk", "Baju Koko Pjg", "Baju Batik Pdk", "Baju Batik Pjg", "Hoodie/Jaket"], messageType: "lihat", images: [] },
+    { title: "Sandal/Sepatu", messageType: "lihat", images: [] },
+    { title: "Jam Tangan", messageType: "lihat", images: [] }
+  ],
+  "Lain-lain": [
+    { title: "Tas", variants: ["Tas selempang", "Tas travel", "Tas gendong"], messageType: "lihat", images: [] },
+    { title: "Perabotan", messageType: "lihat", images: [] },
+    { title: "Boneka", messageType: "lihat", images: [] },
+    { title: "Selimut", messageType: "lihat", images: [] },
+    { title: "Sajadah", messageType: "lihat", images: [] },
+    { title: "Mukena", messageType: "lihat", images: [] },
+    { title: "Sarung", messageType: "lihat", images: [] },
+    { title: "Bantal", messageType: "lihat", images: [] },
+    { title: "Peralatan Bayi", variants: ["Tempat Makan Bayi", "Kasur Bayi", "Tas Bayi"], messageType: "lihat", images: [] },
+    { title: "Mainan", messageType: "lihat", images: [] }
+  ]
+};
+
+// ============================================================
+// SVG LOGO ANIMATION SETUP
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  const logoText = document.getElementById('logo-text');
+  if (logoText) {
+    const len = Math.ceil(logoText.getComputedTextLength()) + 50;
+    logoText.style.strokeDasharray = len;
+    logoText.style.strokeDashoffset = len;
+    const styleEl = document.createElement('style');
+    styleEl.textContent = `
+      @keyframes drawLoop {
+        0%   { stroke-dashoffset: ${len}; fill: transparent; }
+        60%  { fill: #FFFFFF; }
+        80%  { stroke-dashoffset: 0; }
+        90%  { stroke-dashoffset: ${len}; fill: transparent; }
+        100% { stroke-dashoffset: ${len}; fill: transparent; }
+      }
+    `;
+    styleEl.textContent += ` #logo-text { animation: drawLoop 6s ease-in-out infinite; } `;
+    document.head.appendChild(styleEl);
+  }
+
+  function updateProductOffset() {
+    const header = document.querySelector('header');
+    if (header) {
+      const headerH = header.offsetHeight;
+      const offset = Math.round((headerH / 140) * 150);
+      document.documentElement.style.setProperty('--product-offset', `-${offset}px`);
+    }
+  }
+  updateProductOffset();
+  window.addEventListener('resize', updateProductOffset);
+});
+
+// ============================================================
+// STATE & REFERENSI ELEMEN
+// ============================================================
+const catEl = document.getElementById('categories');
+const productDisplay = document.getElementById('product-display');
+
+let currentCat = Object.keys(data)[0];
+let currentProductIndex = 0;
+let currentImageIndex = 0;
+let autoScrollInterval;
+let isAnimating = false;
+
+// ============================================================
+// RENDER KATEGORI
+// ============================================================
+function renderCats() {
+  catEl.innerHTML = '';
+  Object.keys(data).forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'cat' + (c === currentCat ? ' active' : '');
+    el.textContent = c;
+    el.onclick = () => {
+      if (isAnimating || currentCat === c) return;
+      currentCat = c;
+      currentProductIndex = 0;
+      renderAll();
+      el.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+    };
+    catEl.appendChild(el);
+  });
+}
+
+// ============================================================
+// RENDER PRODUK DENGAN SKELETON
+// ============================================================
+function renderProduct() {
+  const items = data[currentCat];
+  const item = items[currentProductIndex];
+  const images = (item.images && item.images.length > 0)
+    ? item.images
+    : ["https://via.placeholder.com/500x600/1e1e1e/777?text=Tidak+Ada+Foto"];
+
+  // Tambahkan class is-loading untuk memicu skeleton
+  productDisplay.classList.add('skeleton', 'is-loading');
+
+  const imageTags = images.map((img, i) =>
+    `<img src="${img}" loading="lazy" decoding="async" onclick="openLightbox()">`
+  ).join('');
+
+  productDisplay.innerHTML = `
+    <div class="photo-wrapper">
+        <div class="photo-track" id="photo-track">
+            ${imageTags}
+        </div>
+        <div class="img-counter" id="img-count-tag">${images.length > 1 ? '1 / ' + images.length : 'Foto'}</div>
+    </div>
+    <div class="info-section">
+        <h2>${item.title}</h2>
+        <div class="wa-btn" onclick="openPopup()">Tanya Produk</div>
+    </div>
+  `;
+
+  clearInterval(autoScrollInterval);
+  startAutoScroll(images.length);
+}
+
+// Menghapus skeleton jika gambar sudah muncul
+function imageLoaded(img) {
+    productDisplay.classList.remove('skeleton', 'is-loading');
+}
+
+// ============================================================
+// ANIMASI PIRAMIDA
+// ============================================================
+function changeProduct(direction) {
+  if (isAnimating) return;
+  isAnimating = true;
+
+  const container = document.getElementById('product-display');
+  const outClass = direction === 1 ? 'animate-out-left' : 'animate-out-right';
+  const inClass  = direction === 1 ? 'animate-in-right' : 'animate-in-left';
+
+  container.classList.add(outClass);
+
+  setTimeout(() => {
+    const items = data[currentCat];
+    currentProductIndex += direction;
+    if (currentProductIndex < 0) currentProductIndex = items.length - 1;
+    if (currentProductIndex >= items.length) currentProductIndex = 0;
+
+    renderProduct();
+
+    container.classList.remove(outClass);
+    container.classList.add(inClass);
+
+    setTimeout(() => {
+      container.classList.remove(inClass);
+      isAnimating = false;
+    }, 500);
+  }, 500);
+}
+
+// ============================================================
+// AUTO SCROLL FOTO
+// ============================================================
+function startAutoScroll(count) {
+  if (count <= 1) return;
+  const track = document.getElementById('photo-track');
+  const counterTag = document.getElementById('img-count-tag');
+  let idx = 0;
+  autoScrollInterval = setInterval(() => {
+    idx++;
+    if (idx >= count) idx = 0;
+    const width = track.offsetWidth;
+    if (track) track.scrollTo({ left: width * idx, behavior: 'smooth' });
+    if (counterTag) counterTag.textContent = `${idx + 1} / ${count}`;
+  }, 3000);
+}
+
+// ============================================================
+// LIGHTBOX & POPUP
+// ============================================================
+function openLightbox() {
+  const item = data[currentCat][currentProductIndex];
+  const images = (item.images && item.images.length > 0) ? item.images : ["https://via.placeholder.com/500x600/1e1e1e/777?text=Tidak+Ada+Foto"];
+  currentImageIndex = 0;
+  document.getElementById('lightbox').style.display = 'flex';
+  updateLightboxImage(images);
+}
+
+function updateLightboxImage(images) {
+  document.getElementById('lightbox-img').src = images[currentImageIndex];
+  document.getElementById('preview-index').textContent = `${currentImageIndex + 1} / ${images.length}`;
+}
+
+function changePreview(direction) {
+  const item = data[currentCat][currentProductIndex];
+  const images = item.images || [];
+  currentImageIndex += direction;
+  if (currentImageIndex < 0) currentImageIndex = images.length - 1;
+  if (currentImageIndex >= images.length) currentImageIndex = 0;
+  updateLightboxImage(images);
+}
+
+function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
+
+function openPopup() {
+  const product = data[currentCat][currentProductIndex];
+  const popup   = document.getElementById('popup');
+  const options = document.getElementById('popup-options');
+  options.innerHTML = '';
+  if (!product.variants || product.variants.length === 0) { sendWhatsApp(product, ''); return; }
+  product.variants.forEach(v => {
+    const btn = document.createElement('div');
+    btn.className = 'option-btn';
+    btn.textContent = v;
+    btn.onclick = () => sendWhatsApp(product, v);
+    options.appendChild(btn);
+  });
+  popup.style.display = 'flex';
+}
+
+function sendWhatsApp(product, variant) {
+  let msg = `Halo kak, saya tertarik dengan ${product.title} ${variant}`;
+  if (product.messageTemplate) msg = product.messageTemplate.replace("{variant}", variant);
+  window.open(`https://wa.me/628123456789?text=${encodeURIComponent(msg)}`, '_blank');
+  closePopup();
+}
+
+function closePopup() { document.getElementById('popup').style.display = 'none'; }
+
+function renderAll() { renderCats(); renderProduct(); }
+
+renderAll();
+
+// ============================================================
+// PWA INSTALL PROMPT
+// ============================================================
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  setTimeout(() => { document.getElementById('installPopup').classList.add('show'); }, 4000);
+});
+document.getElementById('installBtn').addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  closeInstall();
+});
+function closeInstall() { document.getElementById('installPopup').classList.remove('show'); }
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js")
+      .then(() => console.log("SW aktif"))
+      .catch(err => console.log("SW error", err));
+  });
+}
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    document.getElementById("preloader").classList.add("hide");
+  }, 2200); // durasi cinematic intro
+});
+</script>
+</body>
+</html>
