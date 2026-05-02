@@ -131,7 +131,6 @@ body {
 header,
 .product-container,
 .popup-box,
-.install-box,
 .nav-arrow,
 footer {
     background: rgba(255, 255, 255, 0.08) !important;
@@ -143,6 +142,135 @@ footer {
         0 0 0 1px rgba(255,255,255,0.05),
         inset 0 1px 0 rgba(255,255,255,0.15),
         inset 0 0 20px rgba(255,255,255,0.03);
+}
+
+/* ===== PWA INSTALL BANNER ===== */
+/* Saat pertama muncul: fixed overlay, tidak menggeser konten */
+#installBanner {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 15px;
+    margin: 0 10px;
+    border-radius: 12px;
+    background: rgba(37, 211, 102, 0.12) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(37, 211, 102, 0.35);
+    box-shadow:
+        0 6px 20px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+    z-index: 100;
+    width: calc(100% - 20px);
+    animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Tahap 1: fixed overlay (tidak menggeser konten) */
+#installBanner.show {
+    display: flex;
+    position: fixed;
+    top: 10px;
+    left: 0;
+    right: 0;
+    margin: 0 10px;
+    width: calc(100% - 20px);
+}
+
+/* Tahap 2: setelah user scroll, ikut dokumen (relative) */
+#installBanner.show.scrolled {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    margin: 10px 10px 0;
+    width: calc(100% - 20px);
+}
+
+/* Placeholder agar konten tidak lompat saat banner beralih ke relative */
+#bannerPlaceholder {
+    display: none;
+    height: 0px;
+    transition: height 0.3s ease;
+}
+#bannerPlaceholder.active {
+    display: block;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.banner-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.banner-icon {
+    font-size: 22px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.banner-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.banner-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #FFFFFF;
+    line-height: 1.3;
+}
+
+.banner-desc {
+    font-size: 11px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.3;
+}
+
+.banner-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+#installBannerBtn {
+    padding: 7px 14px;
+    background: #25D366;
+    color: #000;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    white-space: nowrap;
+    transition: 0.2s;
+}
+
+#installBannerBtn:active {
+    transform: scale(0.95);
+}
+
+#closeBannerBtn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    font-size: 18px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 2px 4px;
+    transition: 0.2s;
+}
+
+#closeBannerBtn:hover {
+    color: rgba(255,255,255,0.9);
 }
 
 /* 1. HEADER */
@@ -244,6 +372,7 @@ header h1{
     justify-content: center;
     padding: 15px;
     position: relative;
+    top: 30px; /* geser ke bawah dari posisi normal */
     width: min(70%, 450px);
     max-width: 450px;
     margin: 0 auto;
@@ -492,44 +621,12 @@ footer {
     stroke-width: 1.5;
 }
 
-/* INSTALL POPUP */
-.install-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(10px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    opacity: 0;
-    pointer-events: none;
-    transition: 0.4s;
-}
-.install-overlay.show { opacity: 1; pointer-events: all; }
-.install-box {
-    width: 85%;
-    max-width: 340px;
-    padding: 28px;
-    border-radius: 22px;
-    transform: scale(0.85);
-    opacity: 0;
-    transition: 0.4s;
-}
-.install-overlay.show .install-box { transform: scale(1); opacity: 1; }
-.sub-text { font-size: 15px; font-weight: 800; letter-spacing: 7px; text-align: center; }
-
-.install-header { text-align: center; margin-bottom: 15px; }
-.install-content { text-align: center; margin-bottom: 20px; font-size: 14px; opacity: 0.8; }
-.install-actions { display: flex; flex-direction: column; gap: 10px; }
-.btn-install-cancel { background: none; border: none; color: white; cursor: pointer; font-size: 12px; opacity: 0.6; }
-
 * { -webkit-tap-highlight-color: transparent; }
 button, div, a { outline: none; user-select: none; }
 
 .floating-wa {
     position: fixed;
-    bottom: 55px;
+    bottom: 45px;
     left: 50%;
     transform: translateX(-50%);
     background: #25D366;
@@ -544,6 +641,122 @@ button, div, a { outline: none; user-select: none; }
     transition: 0.2s;
 }
 .floating-wa:active { transform: translateX(-50%) scale(0.95); }
+
+/* ===== POPUP PETUNJUK ===== */
+#welcomePopup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    animation: fadeIn 0.4s ease;
+}
+
+.welcome-box {
+    background: rgba(22, 22, 22, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 22px;
+    padding: 28px 24px 24px;
+    width: 88%;
+    max-width: 340px;
+    text-align: center;
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.12);
+    animation: popIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popIn {
+    0%   { opacity: 0; transform: scale(0.8) translateY(30px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.welcome-icon {
+    font-size: 44px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.welcome-box h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+}
+
+.welcome-box .welcome-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 18px;
+    letter-spacing: 0.5px;
+}
+
+.welcome-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 22px;
+    text-align: left;
+}
+
+.welcome-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.step-num {
+    min-width: 26px;
+    height: 26px;
+    background: #25D366;
+    color: #000;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.step-text {
+    font-size: 12px;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.5;
+    padding-top: 2px;
+}
+
+.step-text strong {
+    color: #FFFFFF;
+    font-weight: 700;
+}
+
+#closeWelcomeBtn {
+    width: 100%;
+    padding: 13px;
+    background: #25D366;
+    color: #000;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 12px;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
+    font-family: 'Poppins', sans-serif;
+}
+
+#closeWelcomeBtn:active {
+    transform: scale(0.97);
+}
 </style>
 </head>
 <body>
@@ -554,6 +767,53 @@ button, div, a { outline: none; user-select: none; }
     <div class="loader-line"></div>
   </div>
 </div>
+
+<!-- ===== POPUP PETUNJUK ===== -->
+<div id="welcomePopup">
+  <div class="welcome-box">
+    <span class="welcome-icon">👋</span>
+    <h2>Selamat Datang!</h2>
+    <p class="welcome-sub">MAESTRO MODE &bull; CALL CENTER</p>
+    <div class="welcome-steps">
+      <div class="welcome-step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>Pilih Kategori</strong> produk yang kamu inginkan dari menu di atas.</div>
+      </div>
+      <div class="welcome-step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>Geser kiri / kanan</strong> menggunakan tombol panah untuk melihat produk lain.</div>
+      </div>
+      <div class="welcome-step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>Foto produk</strong> hanyalah salah satu model yang ada,<strong> untuk model/ukuran lain yang tersedia</strong> tanyakan saja lewat Wa.</div>
+      </div>
+      <div class="welcome-step">
+        <div class="step-num">4</div>
+        <div class="step-text"><strong>Tombol Whatsapp</strong> di bawah layar bisa digunakan kapan saja untuk menghubungi kami.</div>
+      </div>
+    </div>
+    <button id="closeWelcomeBtn">️Silahkan hubungi kami</button>
+  </div>
+</div>
+
+<!-- Placeholder untuk banner install agar tidak lompat saat beralih ke relative -->
+<div id="bannerPlaceholder"></div>
+
+<!-- PWA INSTALL BANNER (overlay fixed saat pertama muncul) -->
+<div id="installBanner">
+  <div class="banner-left">
+    <div class="banner-icon">📲</div>
+    <div class="banner-text">
+      <div class="banner-title">Install Maestro Mode</div>
+      <div class="banner-desc">Akses lebih cepat, tampil seperti app premium</div>
+    </div>
+  </div>
+  <div class="banner-actions">
+    <button id="installBannerBtn">Install</button>
+    <button id="closeBannerBtn">&times;</button>
+  </div>
+</div>
+
 <header>
     <div class="logo-svg">
       <svg viewBox="0 0 600 100">
@@ -595,64 +855,47 @@ button, div, a { outline: none; user-select: none; }
     </div>
 </div>
 
-<div id="installPopup" class="install-overlay">
-  <div class="install-box">
-    <div class="install-header">
-      <h2>Maestro Mode</h2>
-      <p>Experience it like an app</p>
-    </div>
-    <div class="install-content">
-      <p>Install sekarang untuk akses lebih cepat, tanpa buka browser, dan tampil seperti aplikasi premium.</p>
-    </div>
-    <div class="install-actions">
-      <button id="installBtn" class="btn-install">Install App</button>
-      <button onclick="closeInstall()" class="btn-install-cancel">Nanti</button>
-    </div>
-  </div>
-</div>
-
 <script>
 // ============================================================
 // DATA KATALOG
 // ============================================================
-const data = {
-  "Anak cowok": [
-    { title: "Celana", variants: ["Pendek", "Panjang"], messageType: "lihat", images: ["https://images.unsplash.com/photo-1519457439534-119c4c1c4706?auto=format&fit=crop&w=500&q=80"] },
-    { title: "Atasan", variants: ["Kaos Lengan Pendek", "Kaos Lengan Panjang", "Kemeja Pdk", "Kemeja Pjg", "Hoodie/Jaket"], messageType: "tanya", images: ["https://images.unsplash.com/photo-1503919919749-646ddc4fddfa?auto=format&fit=crop&w=500&q=80"] },
-    { title: "Setelan", variants: ["Setelan Hp", "Setelan Cp", "Setelan Pp"], messageTemplate: "Halo kak, cek {variant}", images: ["https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?auto=format&fit=crop&w=500&q=80"] },
-    { title: "Baju Koko", messageType: "lihat", images: ["https://images.unsplash.com/photo-1598440499033-547b19615c41?auto=format&fit=crop&w=500&q=80"] }
+const data = {  
+  "anak cowok": [  
+    { title: "celana", variants: ["pendek", "panjang"], messageTemplate: "Permisi kak, saya mau lihat {title} {variant} untuk {kategori}.", images: [""] },  
+    { title: "atasan", variants: ["kaos lengan pendek", "kaos lengan panjang", "kemeja pdk", "kemeja pjg", "hoodie/jaket"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images: ["https://images.unsplash.com/photo-1503919919749-646ddc4fddfa?auto=format&fit=crop&w=500&q=80"] },  
+    { title: "setelan", variants: ["setelan Hp", "setelan Cp", "setelan Pp"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images: ["https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?auto=format&fit=crop&w=500&q=80"] },  
+    { title: "Baju koko", messageTemplate: "Permisi kak, saya mau lihat {title} untuk {kategori}.", images: ["https://images.unsplash.com/photo-1598440499033-547b19615c41?auto=format&fit=crop&w=500&q=80"] }  
   ],
-  "Anak cewek": [
-    { title: "Bawahan", variants: ["Celana Pdk", "Celana Pjg"], messageType: "lihat", images: [] },
-    { title: "Atasan", variants: ["Kaos Pdk", "Kaos Pjg", "Hoodie/Jaket"], messageType: "lihat", images: [] },
-    { title: "Setelan", variants: ["Setelan Hp", "Setelan Cp", "Setelan Pp"], messageType: "lihat", images: [] },
-    { title: "Dress", messageType: "lihat", images: [] }
-  ],
-  "Cewek Dewasa": [
-    { title: "Bawahan", variants: ["Hotpants", "Celana Pjg", "Kulot 3/4", "Kulot", "Rok"], messageType: "lihat", images: [] },
-    { title: "Atasan", variants: ["Crop Top", "Kaos Pdk", "Kaos Pjg", "Blouse", "Dress", "Tunik", "Hoodie/Jaket", "Daster"], messageType: "lihat", images: [] },
-    { title: "Sandal/Sepatu", variants: ["Sandal Cewek", "Sepatu Cewek"], messageType: "lihat", images: [] },
-    { title: "Jam Tangan", messageType: "lihat", images: [] }
-  ],
-  "Cowok Dewasa": [
-    { title: "Bawahan", variants: ["Celana Pdk", "Celana Pjg"], messageType: "lihat", images: [] },
-    { title: "Atasan", variants: ["Singlet", "Kaos Pdk", "Kaos Pjg", "Kemeja Pdk", "Kemeja Pjg", "Baju Koko Pdk", "Baju Koko Pjg", "Baju Batik Pdk", "Baju Batik Pjg", "Hoodie/Jaket"], messageType: "lihat", images: [] },
-    { title: "Sandal/Sepatu", messageType: "lihat", images: [] },
-    { title: "Jam Tangan", messageType: "lihat", images: [] }
-  ],
-  "Lain-lain": [
-    { title: "Tas", variants: ["Tas selempang", "Tas travel", "Tas gendong"], messageType: "lihat", images: [] },
-    { title: "Perabotan", messageType: "lihat", images: [] },
-    { title: "Boneka", messageType: "lihat", images: [] },
-    { title: "Selimut", messageType: "lihat", images: [] },
-    { title: "Sajadah", messageType: "lihat", images: [] },
-    { title: "Mukena", messageType: "lihat", images: [] },
-    { title: "Sarung", messageType: "lihat", images: [] },
-    { title: "Bantal", messageType: "lihat", images: [] },
-    { title: "Peralatan Bayi", variants: ["Tempat Makan Bayi", "Kasur Bayi", "Tas Bayi"], messageType: "lihat", images: [] },
-    { title: "Mainan", messageType: "lihat", images: [] }
-  ]
-};
+  "anak cewek": [  
+    { title: "bawahan", variants: ["celana pdk", "celana pjg"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:[a.webp,a.webp] },  
+    { title: "atasan", variants: ["kaos pdk", "kaos pjg", "Hoodie/Jaket"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:[a.webp,a.webp] },  
+    { title: "setelan", variants: ["setelan Hp", "setelan Cp", "setelan Pp"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:[a.webp,a.webp] },  
+    { title: "Dress", messageTemplate: "Permisi kak, saya mau lihat {title} untuk {kategori}.", images:[a.webp,a.webp] }  
+  ],  
+  "cewek dewasa": [  
+    { title: "Bawahan", variants: ["Hotpants", "Celana pjg", "Kulot 3/4", "Kulot", "Rok"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:[a.webp,a.webp] },  
+    { title: "Atasan", variants: ["Crop Top", "Kaos Pdk", "Kaos Pjg", "Blouse", "Dress", "Tunik", "Hoodie/Jaket", "Daster"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:[a.webp,a.webp] },  
+    { title: "Sandal/Sepatu", variants: ["Sandal", "Sepatu"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:[a.webp,a.webp] },  
+    { title: "Jam Tangan", messageTemplate: "Permisi kak, saya mau lihat {title} untuk {kategori}.", images:[a.webp,a.webp] }  
+  ],  
+  "cowok dewasa": [  
+    { title: "Bawahan", variants: ["Celana Pdk", "Celana Pjg"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:[a.webp,a.webp] },  
+    { title: "Atasan", variants: ["Singlet", "Kaos Pdk", "Kaos Pjg", "Kemeja Pdk", "Kemeja Pjg", "Baju Koko Pdk", "Baju Koko Pjg", "Baju Batik Pdk", "Baju Batik Pjg", "Hoodie/Jaket"], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:[a.webp,a.webp] },  
+    { title: "Sandal/Sepatu", variants: ["Sandal",'Sepatu'], messageTemplate: "Permisi kak, saya mau lihat {variant} untuk {kategori}.", images:[a.webp,a.webp] },  
+    { title: "Jam Tangan", messageTemplate: "Permisi kak, saya mau lihat {title} untuk {kategori}.", images:[a.webp,a.webp] }  
+  ],  
+  "Lain-lain": [  
+    { title: "Tas", variants: ["Tas selempang", "Tas travel", "Tas gendong"], messageTemplate: "Permisi kak, saya mau lihat {variant}.", images:[a.webp,a.webp] },  
+    { title: "Perabotan", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:[a.webp,a.webp] },  
+    { title: "Boneka", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:[a.webp,a.webp] },  
+    { title: "Selimut", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:[a.webp,a.webp] },  
+    { title: "Sajadah", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:[a.webp,a.webp] },  
+    { title: "Mukena", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:[a.webp,a.webp] },  
+    { title: "Sarung", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:[a.webp,a.webp] },  
+    { title: "Bantal", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:[a.webp,a.webp] },  
+    { title: "Peralatan Bayi", variants: ["Tempat Makan Bayi", "Kasur Bayi", "Tas Bayi"], messageTemplate: "Permisi kak, saya mau lihat {variant}.", images:[a.webp,a.webp] },  
+    { title: "Mainan", messageTemplate: "Permisi kak, saya mau lihat {title}.", images:[a.webp,a.webp] }  
+  ]  };
 
 // ============================================================
 // SVG LOGO ANIMATION SETUP
@@ -731,7 +974,6 @@ function renderProduct() {
     ? item.images
     : ["https://via.placeholder.com/500x600/1e1e1e/777?text=Tidak+Ada+Foto"];
 
-  // Tambahkan class is-loading untuk memicu skeleton
   productDisplay.classList.add('skeleton', 'is-loading');
 
   const imageTags = images.map((img, i) =>
@@ -755,9 +997,8 @@ function renderProduct() {
   startAutoScroll(images.length);
 }
 
-// Menghapus skeleton jika gambar sudah muncul
 function imageLoaded(img) {
-    productDisplay.classList.remove('skeleton', 'is-loading');
+  productDisplay.classList.remove('skeleton', 'is-loading');
 }
 
 // ============================================================
@@ -851,11 +1092,30 @@ function openPopup() {
   popup.style.display = 'flex';
 }
 
-function sendWhatsApp(product, variant) {
-  let msg = `Halo kak, saya tertarik dengan ${product.title} ${variant}`;
-  if (product.messageTemplate) msg = product.messageTemplate.replace("{variant}", variant);
-  window.open(`https://wa.me/628123456789?text=${encodeURIComponent(msg)}`, '_blank');
-  closePopup();
+function parseTemplate(template, dataObj) {
+  return template.replace(/\{(.*?)\}/g, (_, key) => {
+    return dataObj[key] !== undefined && dataObj[key] !== null
+      ? dataObj[key]
+      : '';
+  }).replace(/\s+/g, ' ').trim();
+}
+function sendWhatsApp(product, variant) {  
+  const payload = {
+    title: product.title || '',
+    variant: variant || '',
+    kategori: currentCat || ''
+  };
+
+  let msg;
+
+  if (product.messageTemplate) {
+    msg = parseTemplate(product.messageTemplate, payload);
+  } else {
+    msg = `Halo kak, saya tertarik dengan ${payload.title} ${payload.variant}`;
+  }
+
+  window.open(`https://wa.me/6281391676392?text=${encodeURIComponent(msg)}`, '_blank');  
+  closePopup();  
 }
 
 function closePopup() { document.getElementById('popup').style.display = 'none'; }
@@ -865,22 +1125,86 @@ function renderAll() { renderCats(); renderProduct(); }
 renderAll();
 
 // ============================================================
-// PWA INSTALL PROMPT
+// POPUP PETUNJUK
+// ============================================================
+document.getElementById('closeWelcomeBtn').addEventListener('click', () => {
+  const wp = document.getElementById('welcomePopup');
+  wp.style.opacity = '0';
+  wp.style.transition = 'opacity 0.3s ease';
+  setTimeout(() => { wp.style.display = 'none'; }, 300);
+});
+
+// ============================================================
+// PWA INSTALL BANNER
 // ============================================================
 let deferredPrompt;
+const installBanner     = document.getElementById('installBanner');
+const installBannerBtn  = document.getElementById('installBannerBtn');
+const closeBannerBtn    = document.getElementById('closeBannerBtn');
+const bannerPlaceholder = document.getElementById('bannerPlaceholder');
+
+const BANNER_HEIGHT = 58;
+
+function isAppInstalled() {
+  return window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true;
+}
+
+if (isAppInstalled()) {
+  installBanner.style.display = 'none';
+}
+
+window.addEventListener('scroll', () => {
+  if (!installBanner.classList.contains('show')) return;
+  if (window.scrollY > 10) {
+    if (!installBanner.classList.contains('scrolled')) {
+      installBanner.classList.add('scrolled');
+      bannerPlaceholder.style.height = '0px';
+      bannerPlaceholder.classList.remove('active');
+    }
+  } else {
+    if (installBanner.classList.contains('scrolled')) {
+      installBanner.classList.remove('scrolled');
+    }
+  }
+}, { passive: true });
+
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  setTimeout(() => { document.getElementById('installPopup').classList.add('show'); }, 4000);
+  if (!isAppInstalled()) {
+    setTimeout(() => {
+      installBanner.classList.add('show');
+    }, 4000);
+  }
 });
-document.getElementById('installBtn').addEventListener('click', async () => {
+
+installBannerBtn.addEventListener('click', async () => {
   if (!deferredPrompt) return;
   deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
+  const { outcome } = await deferredPrompt.userChoice;
   deferredPrompt = null;
-  closeInstall();
+  installBanner.classList.remove('show', 'scrolled');
+  bannerPlaceholder.classList.remove('active');
+  bannerPlaceholder.style.height = '0px';
 });
-function closeInstall() { document.getElementById('installPopup').classList.remove('show'); }
+
+closeBannerBtn.addEventListener('click', () => {
+  installBanner.classList.remove('show', 'scrolled');
+  bannerPlaceholder.classList.remove('active');
+  bannerPlaceholder.style.height = '0px';
+});
+
+window.addEventListener('appinstalled', () => {
+  installBanner.classList.remove('show', 'scrolled');
+  installBanner.style.display = 'none';
+  bannerPlaceholder.classList.remove('active');
+  bannerPlaceholder.style.height = '0px';
+});
+
+// ============================================================
+// SERVICE WORKER
+// ============================================================
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./sw.js")
@@ -888,10 +1212,11 @@ if ("serviceWorker" in navigator) {
       .catch(err => console.log("SW error", err));
   });
 }
+
 window.addEventListener("load", () => {
   setTimeout(() => {
     document.getElementById("preloader").classList.add("hide");
-  }, 2200); // durasi cinematic intro
+  }, 2200);
 });
 </script>
 </body>
